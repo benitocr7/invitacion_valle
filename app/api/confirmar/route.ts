@@ -1,9 +1,7 @@
 import { NextResponse } from 'next/server';
-import { createClient } from '@libsql/client';
+import { PrismaClient } from '@prisma/client';
 
-const libsql = createClient({
-  url: 'file:./dev.db',
-});
+const prisma = new PrismaClient();
 
 export async function POST(request: Request) {
   try {
@@ -14,10 +12,10 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Name is required' }, { status: 400 });
     }
 
-    const now = new Date().toISOString();
-    await libsql.execute({
-      sql: 'INSERT INTO Guest (name, createdAt) VALUES (?, ?)',
-      args: [name, now]
+    await prisma.guest.create({
+      data: {
+        name,
+      }
     });
 
     return NextResponse.json({ success: true });

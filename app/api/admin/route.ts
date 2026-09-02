@@ -1,9 +1,7 @@
 import { NextResponse } from 'next/server';
-import { createClient } from '@libsql/client';
+import { PrismaClient } from '@prisma/client';
 
-const libsql = createClient({
-  url: 'file:./dev.db',
-});
+const prisma = new PrismaClient();
 
 const ADMIN_PASSWORD = "admin"; // Basic password
 
@@ -16,12 +14,11 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { rows } = await libsql.execute('SELECT * FROM Guest ORDER BY createdAt DESC');
-    const guests = rows.map(row => ({
-      id: row.id,
-      name: row.name,
-      createdAt: row.createdAt,
-    }));
+    const guests = await prisma.guest.findMany({
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
 
     return NextResponse.json({ success: true, guests });
   } catch (error: any) {
