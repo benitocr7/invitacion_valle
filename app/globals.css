@@ -1,0 +1,166 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,600&family=Poppins:wght@400;500;600;700;800&display=swap');
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: 'Poppins', Arial, Helvetica, sans-serif;
+}
+
+/* --- ESTILOS DE LA INVITACION --- */
+.invitacion {
+  width: 100%;
+  height: 100%;
+  background: #f4f1ec;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.foto {
+  width: 100%;
+  line-height: 0;
+  position: relative;
+  /* El aspect ratio es importante para que la foto encaje bien si usamos objeto cover */
+  aspect-ratio: 410 / 380;
+}
+
+.foto img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.contenido {
+  position: relative;
+  flex: 1;
+  padding: 3vh 2vw;
+  text-align: center;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(255,248,230,0.8), transparent 30%),
+    radial-gradient(circle at 10% 20%, rgba(255,255,255,0.7), transparent 40%),
+    radial-gradient(circle at 90% 70%, rgba(200,153,63,0.15), transparent 50%),
+    radial-gradient(circle at 50% 100%, rgba(200,153,63,0.2), transparent 50%),
+    #f2eee8;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.linea-invitacion {
+  font-size: min(3.5vw, 1.8dvh);
+  color: #333;
+  margin-bottom: 0.5vh;
+}
+
+.titulo-principal {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-weight: 600;
+  font-size: min(8vw, 4dvh);
+  color: #1c3a5e;
+  margin: 0.5vh 0;
+}
+
+.titulo-iglesia {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 800;
+  font-size: min(8vw, 4dvh);
+  color: #1c3a5e;
+  letter-spacing: 1px;
+  margin-bottom: 2.5vh;
+}
+
+.titulo-iglesia .acento {
+  color: #c99a3c;
+  font-weight: 600;
+  font-size: min(5.5vw, 2.8dvh);
+  vertical-align: middle;
+}
+
+.fecha-destacada {
+  font-weight: 700;
+  font-size: min(4.5vw, 2.2dvh);
+  color: #1c3a5e;
+  margin-bottom: 1.5vh;
+}
+
+.culto {
+  font-weight: 700;
+  font-size: min(4vw, 2dvh);
+  color: #1c3a5e;
+}
+
+.subtexto {
+  font-size: min(3.5vw, 1.7dvh);
+  color: #444;
+  margin: 0.5vh 0;
+}
+
+.hora-top {
+  font-size: min(3.5vw, 1.8dvh);
+  color: #333;
+  margin-bottom: 3vh;
+}
+
+.nombre-iglesia {
+  font-size: min(4.5vw, 2.2dvh);
+  font-weight: 700;
+  color: #1c3a5e;
+  margin-bottom: 1vh;
+}
+
+.ubicacion {
+  font-size: min(3.5vw, 1.8dvh);
+  color: #333;
+  line-height: 1.4;
+}
+
+.datos {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin: 3.5vh 0;
+  padding: 0 1vw;
+}
+
+.dato {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+}
+
+.dato-titulo {
+  font-weight: 700;
+  font-size: min(3.5vw, 1.8dvh);
+  color: #1c3a5e;
+  margin-bottom: 0.5vh;
+}
+
+.dato-valor {
+  font-size: min(3.2vw, 1.6dvh);
+  color: #333;
+}
