@@ -160,7 +160,10 @@ export default function CartaInteractiva() {
           className="absolute inset-0 z-30 flex items-center justify-center bg-black/55 px-8 text-center text-white backdrop-blur-sm"
         >
           <span className="flex flex-col items-center gap-2 px-2 py-1">
-            <span className="text-3xl font-light">▶</span>
+            <span
+              aria-hidden="true"
+              className="h-0 w-0 border-y-[10px] border-l-[15px] border-y-transparent border-l-white"
+            />
             <span className="text-xs font-semibold tracking-[0.38em]">
               TOCA PARA INICIAR
             </span>
