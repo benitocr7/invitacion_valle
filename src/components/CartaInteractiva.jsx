@@ -215,7 +215,7 @@ export default function CartaInteractiva() {
       {esperandoDeslizar && (
         <>
           <motion.div
-            className="absolute left-1/2 top-[18%] h-[46%] w-[88%] -translate-x-1/2 cursor-grab active:cursor-grabbing z-20"
+            className="absolute inset-0 z-20 h-full w-full cursor-grab active:cursor-grabbing"
             style={{ y: dragY, touchAction: 'none' }}
             drag="y"
             dragConstraints={{ top: -220, bottom: 0 }}
