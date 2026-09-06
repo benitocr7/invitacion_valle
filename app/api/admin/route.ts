@@ -3,7 +3,7 @@ import { PrismaClient } from '@prisma/client';
 import { PrismaPg } from '@prisma/adapter-pg';
 
 const adapter = new PrismaPg({
-  connectionString: "postgres://8b6e13705a475f5d3df4ecee2ae4d99d1c591b9643afee0adce0fa3efefd3958:sk_LO-ZDcgHNNKUQQWUZT7d3@db.prisma.io:5432/postgres?sslmode=require"
+  connectionString: process.env.DATABASE_URL,
 });
 const prisma = new PrismaClient({ adapter });
 
@@ -25,8 +25,32 @@ export async function POST(request: Request) {
     });
 
     return NextResponse.json({ success: true, guests });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error fetching guests:', error);
-    return NextResponse.json({ error: 'Internal Server Error', details: error?.message || String(error) }, { status: 500 });
+    const details = error instanceof Error ? error.message : String(error);
+    const code = typeof error === 'object' && error !== null && 'code' in error ? error.code : undefined;
+    return NextResponse.json({ error: 'Internal Server Error', code, details }, { status: 500 });
+  }
+}
+
+export async function DELETE(request: Request) {
+  try {
+    const body = await request.json();
+    const { password, id } = body;
+
+    if (password !== ADMIN_PASSWORD) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    const guestId = Number(id);
+    if (!Number.isInteger(guestId)) {
+      return NextResponse.json({ error: 'Invalid guest id' }, { status: 400 });
+    }
+
+    await prisma.guest.delete({ where: { id: guestId } });
+    return NextResponse.json({ success: true });
+  } catch (error: unknown) {
+    console.error('Error deleting guest:', error);
+    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }

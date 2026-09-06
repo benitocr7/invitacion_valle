@@ -3,27 +3,38 @@ import { PrismaClient } from '@prisma/client';
 import { PrismaPg } from '@prisma/adapter-pg';
 
 const adapter = new PrismaPg({
-  connectionString: "postgres://8b6e13705a475f5d3df4ecee2ae4d99d1c591b9643afee0adce0fa3efefd3958:sk_LO-ZDcgHNNKUQQWUZT7d3@db.prisma.io:5432/postgres?sslmode=require"
+  connectionString: process.env.DATABASE_URL,
 });
 const prisma = new PrismaClient({ adapter });
 
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { name } = body;
+    const { name, tipo = 'individual', integrantes } = body;
 
     if (!name || name.trim() === '') {
       return NextResponse.json({ error: 'Name is required' }, { status: 400 });
     }
 
+    if (!['familia', 'individual'].includes(tipo)) {
+      return NextResponse.json({ error: 'Invalid attendance type' }, { status: 400 });
+    }
+
+    const cantidadIntegrantes = tipo === 'familia' ? Number(integrantes) : null;
+    if (tipo === 'familia' && (cantidadIntegrantes === null || !Number.isInteger(cantidadIntegrantes) || cantidadIntegrantes < 1)) {
+      return NextResponse.json({ error: 'Family member count is required' }, { status: 400 });
+    }
+
     await prisma.guest.create({
       data: {
-        name,
+        name: name.trim(),
+        tipo,
+        integrantes: cantidadIntegrantes,
       }
     });
 
     return NextResponse.json({ success: true });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error saving guest:', error);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }

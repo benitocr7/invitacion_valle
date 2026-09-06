@@ -12,7 +12,9 @@ datasource db {
 }
 
 model Guest {
-  id        Int      @id @default(autoincrement())
-  name      String
-  createdAt DateTime @default(now())
+  id          Int      @id @default(autoincrement())
+  name        String
+  tipo        String   @default("individual")
+  integrantes Int?
+  createdAt   DateTime @default(now())
 }

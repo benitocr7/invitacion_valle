@@ -5,6 +5,8 @@ import { useState } from 'react';
 type Guest = {
   id: number;
   name: string;
+  tipo: string;
+  integrantes: number | null;
   createdAt: string;
 };
 
@@ -14,6 +16,11 @@ export default function AdminPage() {
   const [guests, setGuests] = useState<Guest[]>([]);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const totalConfirmados = guests.reduce(
+    (total, guest) => total + (guest.tipo === 'familia' ? guest.integrantes ?? 0 : 1),
+    0
+  );
 
   const fetchGuests = async (currentPassword = password) => {
     setLoading(true);
@@ -32,7 +39,7 @@ export default function AdminPage() {
       } else {
         if (!authenticated) setError('Contraseña incorrecta');
       }
-    } catch (err) {
+    } catch {
       if (!authenticated) setError('Error de conexión');
     } finally {
       setLoading(false);
@@ -43,6 +50,31 @@ export default function AdminPage() {
     e.preventDefault();
     fetchGuests(password);
   };
+
+  const deleteGuest = async (guest: Guest) => {
+    if (!window.confirm(`¿Eliminar la confirmación de ${guest.name}?`)) return;
+
+    try {
+      const res = await fetch('/api/admin', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password, id: guest.id }),
+      });
+
+      if (res.ok) {
+        setGuests((currentGuests) => currentGuests.filter((currentGuest) => currentGuest.id !== guest.id));
+      } else {
+        setError('No se pudo eliminar la confirmación');
+      }
+    } catch {
+      setError('Error de conexión al eliminar');
+    }
+  };
+
+  const filteredGuests = guests.filter((guest) => {
+    const search = searchTerm.trim().toLowerCase();
+    return !search || guest.name.toLowerCase().includes(search) || guest.tipo.toLowerCase().includes(search);
+  });
 
   if (!authenticated) {
     return (
@@ -81,7 +113,7 @@ export default function AdminPage() {
         {/* Modal de Total de Invitados */}
         <div className="bg-white shadow-md rounded-xl overflow-hidden mb-8 flex flex-col items-center justify-center py-8 border-t-4 border-[#cc9b4c]">
           <h2 className="text-gray-500 text-lg font-medium mb-1 tracking-wide uppercase">Total Confirmados</h2>
-          <div className="text-7xl font-extrabold text-[#112a46] drop-shadow-sm">{guests.length}</div>
+          <div className="text-7xl font-extrabold text-[#112a46] drop-shadow-sm">{totalConfirmados}</div>
         </div>
 
         <div className="bg-white shadow rounded-lg overflow-hidden">
@@ -112,26 +144,49 @@ export default function AdminPage() {
             </button>
           </div>
           <div className="px-6 py-5">
+            <input
+              type="search"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              placeholder="Buscar por nombre o tipo..."
+              className="mb-5 w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-800 outline-none focus:border-[#cc9b4c] focus:ring-2 focus:ring-[#cc9b4c]/30"
+            />
             {guests.length === 0 ? (
               <p className="text-gray-500 text-center py-8">Aún no hay invitados confirmados.</p>
+            ) : filteredGuests.length === 0 ? (
+              <p className="text-gray-500 text-center py-8">No se encontraron invitados.</p>
             ) : (
               <ul className="divide-y divide-gray-200">
-                {guests.map((guest) => (
+                {filteredGuests.map((guest) => (
                   <li key={guest.id} className="py-4 flex justify-between items-center hover:bg-gray-50 px-2 rounded-lg transition-colors">
                     <div className="flex items-center gap-3">
                       <div className="h-10 w-10 rounded-full bg-[#cc9b4c]/20 flex items-center justify-center text-[#cc9b4c] font-bold">
                         {guest.name.charAt(0).toUpperCase()}
                       </div>
-                      <p className="text-lg font-medium text-gray-900">{guest.name}</p>
+                      <div>
+                        <p className="text-lg font-medium text-gray-900">{guest.name}</p>
+                        <p className="text-sm text-gray-500">
+                          {guest.tipo === 'familia' ? `Familia · ${guest.integrantes} integrantes` : 'Individual'}
+                        </p>
+                      </div>
                     </div>
-                    <span className="text-sm text-gray-500">
-                      {new Date(guest.createdAt).toLocaleDateString('es-ES', {
-                        day: 'numeric',
-                        month: 'short',
-                        hour: '2-digit',
-                        minute: '2-digit'
-                      })}
-                    </span>
+                    <div className="flex items-center gap-4">
+                      <span className="text-sm text-gray-500">
+                        {new Date(guest.createdAt).toLocaleDateString('es-ES', {
+                          day: 'numeric',
+                          month: 'short',
+                          hour: '2-digit',
+                          minute: '2-digit'
+                        })}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => deleteGuest(guest)}
+                        className="rounded bg-red-50 px-3 py-1.5 text-sm font-semibold text-red-600 transition-colors hover:bg-red-100"
+                      >
+                        Eliminar
+                      </button>
+                    </div>
                   </li>
                 ))}
               </ul>

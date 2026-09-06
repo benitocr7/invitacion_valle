@@ -13,6 +13,8 @@ export default function CartaInteractiva() {
   const [cartaAbierta, setCartaAbierta] = useState(false);
   const [mostrarFormulario, setMostrarFormulario] = useState(false);
   const [nombreFamilia, setNombreFamilia] = useState('');
+  const [tipoAsistencia, setTipoAsistencia] = useState('familia');
+  const [integrantes, setIntegrantes] = useState('');
   const [asistenciaConfirmada, setAsistenciaConfirmada] = useState(false);
   const [audioHabilitado, setAudioHabilitado] = useState(false);
   const [mostrarOverlayInicio, setMostrarOverlayInicio] = useState(true);
@@ -314,9 +316,9 @@ export default function CartaInteractiva() {
             <div 
               className="absolute z-10 left-1/2 -translate-x-1/2"
               style={{
-                top: '94.9%',
-                width: '45.5%', 
-                height: '3.5%' 
+                top: '95.5%',
+                width: '46.5%',
+                height: '3.2%'
               }}
             >
               <motion.button 
@@ -364,15 +366,44 @@ export default function CartaInteractiva() {
                           Confirma tu Asistencia
                         </h3>
                         <p className="text-center text-gray-600 text-sm">
-                          Por favor, ingresa tu nombre o el de tu familia.
+                          ¿Cómo asistirás a la invitación?
                         </p>
+                        <div className="grid grid-cols-2 gap-3 w-full">
+                          <button
+                            type="button"
+                            onClick={() => setTipoAsistencia('familia')}
+                            className={`rounded-lg border px-4 py-3 font-semibold transition-colors ${tipoAsistencia === 'familia' ? 'border-[#cc9b4c] bg-[#cc9b4c]/15 text-[#112a46]' : 'border-gray-300 bg-white text-gray-500'}`}
+                          >
+                            Familia
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setTipoAsistencia('individual');
+                              setIntegrantes('');
+                            }}
+                            className={`rounded-lg border px-4 py-3 font-semibold transition-colors ${tipoAsistencia === 'individual' ? 'border-[#cc9b4c] bg-[#cc9b4c]/15 text-[#112a46]' : 'border-gray-300 bg-white text-gray-500'}`}
+                          >
+                            Individual
+                          </button>
+                        </div>
                         <input
                           type="text"
-                          placeholder="Ej: Familia Pérez"
+                          placeholder={tipoAsistencia === 'familia' ? 'Ej: Familia Pérez' : 'Ej: Juan Pérez'}
                           value={nombreFamilia}
                           onChange={(e) => setNombreFamilia(e.target.value)}
                           className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#cc9b4c] text-gray-800"
                         />
+                        {tipoAsistencia === 'familia' && (
+                          <input
+                            type="number"
+                            min="1"
+                            placeholder="Número de integrantes"
+                            value={integrantes}
+                            onChange={(e) => setIntegrantes(e.target.value)}
+                            className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#cc9b4c] text-gray-800"
+                          />
+                        )}
                         <div className="flex gap-3 w-full">
                           <button
                             onClick={() => setMostrarFormulario(false)}
@@ -382,12 +413,18 @@ export default function CartaInteractiva() {
                           </button>
                           <button
                             onClick={async () => {
-                              if(nombreFamilia.trim()) {
+                              const nombreValido = nombreFamilia.trim();
+                              const integrantesValidos = tipoAsistencia === 'individual' || (Number.isInteger(Number(integrantes)) && Number(integrantes) > 0);
+                              if (nombreValido && integrantesValidos) {
                                 try {
                                   const res = await fetch('/api/confirmar', {
                                     method: 'POST',
                                     headers: { 'Content-Type': 'application/json' },
-                                    body: JSON.stringify({ name: nombreFamilia.trim() }),
+                                    body: JSON.stringify({
+                                      name: nombreValido,
+                                      tipo: tipoAsistencia,
+                                      integrantes: tipoAsistencia === 'familia' ? Number(integrantes) : null,
+                                    }),
                                   });
                                   if (res.ok) {
                                     activarVideoFinal();
@@ -400,7 +437,7 @@ export default function CartaInteractiva() {
                                 }
                               }
                             }}
-                            disabled={!nombreFamilia.trim()}
+                            disabled={!nombreFamilia.trim() || (tipoAsistencia === 'familia' && (!integrantes || Number(integrantes) < 1))}
                             className="flex-1 px-4 py-3 rounded-lg bg-[#cc9b4c] text-[#112a46] font-semibold hover:bg-[#b88534] disabled:opacity-50 transition-colors"
                           >
                             Confirmar
