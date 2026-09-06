@@ -3,23 +3,27 @@
 import { useRef, useState } from 'react';
 import Image from 'next/image';
 import { AnimatePresence, motion, useMotionValue, useSpring, useMotionValueEvent, useTransform } from 'framer-motion';
-import invitacionImg from '../../public/invitacion.png';
 
-export default function CartaInteractiva() {
+export default function CartaInteractiva({ nombreInicialProp = '', invitacionSrc = '/invitacion.png', mostrarEtiquetaPersonalizada = true, esPersonalizada = false }) {
+  const nombreDesdeUrl = typeof window === 'undefined'
+    ? ''
+    : new URLSearchParams(window.location.search).get('nombre')?.trim() || '';
+  const nombreInicial = nombreInicialProp || nombreDesdeUrl;
   const videoRef = useRef(null);
   const pausaActivadaRef = useRef(false);
   const [esperandoDeslizar, setEsperandoDeslizar] = useState(false);
   const [abriendoCarta, setAbriendoCarta] = useState(false);
   const [cartaAbierta, setCartaAbierta] = useState(false);
   const [mostrarFormulario, setMostrarFormulario] = useState(false);
-  const [nombreFamilia, setNombreFamilia] = useState('');
-  const [tipoAsistencia, setTipoAsistencia] = useState('familia');
+  const [nombreFamilia, setNombreFamilia] = useState(nombreInicial);
+  const [tipoAsistencia, setTipoAsistencia] = useState(esPersonalizada ? 'individual' : 'familia');
   const [integrantes, setIntegrantes] = useState('');
   const [asistenciaConfirmada, setAsistenciaConfirmada] = useState(false);
   const [audioHabilitado, setAudioHabilitado] = useState(false);
   const [mostrarOverlayInicio, setMostrarOverlayInicio] = useState(true);
   const [videoSrc, setVideoSrc] = useState('/video.mp4');
   const [videoFinalizado, setVideoFinalizado] = useState(false);
+  const nombrePersonalizado = nombreInicial;
 
   const iniciarVideo = async () => {
     if (videoFinalizado) return;
@@ -308,9 +312,15 @@ export default function CartaInteractiva() {
               className="object-cover"
               fill
               priority
-              src={invitacionImg}
+              src={invitacionSrc}
               alt="Invitación especial de la Iglesia Adventista del Séptimo Día"
             />
+
+            {mostrarEtiquetaPersonalizada && nombrePersonalizado && (
+              <div className="absolute left-1/2 top-[8%] z-10 w-[82%] -translate-x-1/2 rounded-lg bg-white/90 px-4 py-2 text-center text-sm font-semibold text-[#112a46] shadow-lg backdrop-blur-sm">
+                Invitación para {nombrePersonalizado}
+              </div>
+            )}
             
             {/* Botón interactivo superpuesto elegante */}
             <div 
@@ -365,42 +375,50 @@ export default function CartaInteractiva() {
                         <h3 className="text-2xl font-semibold text-[#112a46] text-center">
                           Confirma tu Asistencia
                         </h3>
-                        <p className="text-center text-gray-600 text-sm">
-                          ¿Cómo asistirás a la invitación?
-                        </p>
-                        <p className="w-full rounded-lg bg-[#fff7e8] px-4 py-3 text-center text-sm font-medium leading-relaxed text-[#6f5526]">
-                          <strong>Indicación:</strong> Si eliges Familia, escribe cuántas personas asistirán. Si eliges Individual, no necesitas poner ese número.
-                        </p>
-                        <div className="grid grid-cols-2 gap-3 w-full">
-                          <button
-                            type="button"
-                            onClick={() => setTipoAsistencia('familia')}
-                            className={`rounded-lg border px-4 py-3 font-semibold transition-colors ${tipoAsistencia === 'familia' ? 'border-[#cc9b4c] bg-[#cc9b4c]/15 text-[#112a46]' : 'border-gray-300 bg-white text-gray-500'}`}
-                          >
-                            Familia
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => {
-                              setTipoAsistencia('individual');
-                              setIntegrantes('');
-                            }}
-                            className={`rounded-lg border px-4 py-3 font-semibold transition-colors ${tipoAsistencia === 'individual' ? 'border-[#cc9b4c] bg-[#cc9b4c]/15 text-[#112a46]' : 'border-gray-300 bg-white text-gray-500'}`}
-                          >
-                            Individual
-                          </button>
-                        </div>
-                        <label className="w-full text-sm font-semibold text-[#112a46]">
-                          {tipoAsistencia === 'familia' ? 'Nombre de la familia' : 'Tu nombre'}
-                          <input
-                            type="text"
-                            placeholder={tipoAsistencia === 'familia' ? 'Ej: Familia Pérez' : 'Ej: Juan Pérez'}
-                            value={nombreFamilia}
-                            onChange={(e) => setNombreFamilia(e.target.value)}
-                            className="mt-2 w-full rounded-lg border border-gray-300 px-4 py-3 text-base font-normal text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#cc9b4c]"
-                          />
-                        </label>
-                        {tipoAsistencia === 'familia' && (
+                        {esPersonalizada ? (
+                          <p className="text-center text-gray-600 text-sm">
+                            Confirma tu asistencia, {nombreFamilia}.
+                          </p>
+                        ) : (
+                          <>
+                            <p className="text-center text-gray-600 text-sm">
+                              ¿Cómo asistirás a la invitación?
+                            </p>
+                            <p className="w-full rounded-lg bg-[#fff7e8] px-4 py-3 text-center text-sm font-medium leading-relaxed text-[#6f5526]">
+                              <strong>Indicación:</strong> Si eliges Familia, escribe cuántas personas asistirán. Si eliges Individual, no necesitas poner ese número.
+                            </p>
+                            <div className="grid grid-cols-2 gap-3 w-full">
+                              <button
+                                type="button"
+                                onClick={() => setTipoAsistencia('familia')}
+                                className={`rounded-lg border px-4 py-3 font-semibold transition-colors ${tipoAsistencia === 'familia' ? 'border-[#cc9b4c] bg-[#cc9b4c]/15 text-[#112a46]' : 'border-gray-300 bg-white text-gray-500'}`}
+                              >
+                                Familia
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setTipoAsistencia('individual');
+                                  setIntegrantes('');
+                                }}
+                                className={`rounded-lg border px-4 py-3 font-semibold transition-colors ${tipoAsistencia === 'individual' ? 'border-[#cc9b4c] bg-[#cc9b4c]/15 text-[#112a46]' : 'border-gray-300 bg-white text-gray-500'}`}
+                              >
+                                Individual
+                              </button>
+                            </div>
+                            <label className="w-full text-sm font-semibold text-[#112a46]">
+                              {tipoAsistencia === 'familia' ? 'Nombre de la familia' : 'Tu nombre'}
+                              <input
+                                type="text"
+                                placeholder={tipoAsistencia === 'familia' ? 'Ej: Familia Pérez' : 'Ej: Juan Pérez'}
+                                value={nombreFamilia}
+                                onChange={(e) => setNombreFamilia(e.target.value)}
+                                className="mt-2 w-full rounded-lg border border-gray-300 px-4 py-3 text-base font-normal text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#cc9b4c]"
+                              />
+                            </label>
+                          </>
+                        )}
+                        {!esPersonalizada && tipoAsistencia === 'familia' && (
                           <label className="w-full text-sm font-semibold text-[#112a46]">
                             Número de personas que asistirán
                             <input
@@ -450,7 +468,7 @@ export default function CartaInteractiva() {
                             disabled={!nombreFamilia.trim() || (tipoAsistencia === 'familia' && (!integrantes || Number(integrantes) < 1))}
                             className="flex-1 px-4 py-3 rounded-lg bg-[#cc9b4c] text-[#112a46] font-semibold hover:bg-[#b88534] disabled:opacity-50 transition-colors"
                           >
-                            Confirmar
+                            {esPersonalizada ? 'Confirmar asistencia' : 'Confirmar'}
                           </button>
                         </div>
                       </>
