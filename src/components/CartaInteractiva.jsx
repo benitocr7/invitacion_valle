@@ -368,6 +368,9 @@ export default function CartaInteractiva() {
                         <p className="text-center text-gray-600 text-sm">
                           ¿Cómo asistirás a la invitación?
                         </p>
+                        <p className="w-full rounded-lg bg-[#fff7e8] px-4 py-3 text-center text-sm font-medium leading-relaxed text-[#6f5526]">
+                          <strong>Indicación:</strong> Si eliges Familia, escribe cuántas personas asistirán. Si eliges Individual, no necesitas poner ese número.
+                        </p>
                         <div className="grid grid-cols-2 gap-3 w-full">
                           <button
                             type="button"
@@ -387,22 +390,29 @@ export default function CartaInteractiva() {
                             Individual
                           </button>
                         </div>
-                        <input
-                          type="text"
-                          placeholder={tipoAsistencia === 'familia' ? 'Ej: Familia Pérez' : 'Ej: Juan Pérez'}
-                          value={nombreFamilia}
-                          onChange={(e) => setNombreFamilia(e.target.value)}
-                          className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#cc9b4c] text-gray-800"
-                        />
-                        {tipoAsistencia === 'familia' && (
+                        <label className="w-full text-sm font-semibold text-[#112a46]">
+                          {tipoAsistencia === 'familia' ? 'Nombre de la familia' : 'Tu nombre'}
                           <input
-                            type="number"
-                            min="1"
-                            placeholder="Número de integrantes"
-                            value={integrantes}
-                            onChange={(e) => setIntegrantes(e.target.value)}
-                            className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#cc9b4c] text-gray-800"
+                            type="text"
+                            placeholder={tipoAsistencia === 'familia' ? 'Ej: Familia Pérez' : 'Ej: Juan Pérez'}
+                            value={nombreFamilia}
+                            onChange={(e) => setNombreFamilia(e.target.value)}
+                            className="mt-2 w-full rounded-lg border border-gray-300 px-4 py-3 text-base font-normal text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#cc9b4c]"
                           />
+                        </label>
+                        {tipoAsistencia === 'familia' && (
+                          <label className="w-full text-sm font-semibold text-[#112a46]">
+                            Número de personas que asistirán
+                            <input
+                              type="number"
+                              min="1"
+                              inputMode="numeric"
+                              placeholder="Ej: 4"
+                              value={integrantes}
+                              onChange={(e) => setIntegrantes(e.target.value)}
+                              className="mt-2 w-full rounded-lg border border-gray-300 px-4 py-3 text-base font-normal text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#cc9b4c]"
+                            />
+                          </label>
                         )}
                         <div className="flex gap-3 w-full">
                           <button
