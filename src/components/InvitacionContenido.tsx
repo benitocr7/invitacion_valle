@@ -11,6 +11,7 @@ export type ContenidoInvitacion = {
   lugar?: string;
   direccion?: string;
   imagenIglesia?: string;
+  tratamiento?: string;
 };
 
 export default function InvitacionContenido({
@@ -38,7 +39,7 @@ export default function InvitacionContenido({
 
       <section className={styles.panel}>
         <div className={styles.destellos} aria-hidden="true" />
-        {personalizada && nombre && <p className={styles.nombre}>Estimada Srta. {nombre}</p>}
+        {personalizada && nombre && <p className={styles.nombre}>{datos.tratamiento || "Estimada Srta."} {nombre}</p>}
         <p className={styles.intro}>Tenemos el agrado de invitarte a nuestra</p>
         <h1>{datos.evento || "Inauguración"}</h1>
         <div className={styles.linea}><span /><em>de la</em><span /></div>
