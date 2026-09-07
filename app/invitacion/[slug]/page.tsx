@@ -48,5 +48,5 @@ export default async function InvitationPage({ params }: InvitationPageProps) {
     );
   }
 
-  return <InvitacionPersonal datos={invitacion} />;
+  return <InvitacionPersonal datos={invitacion} esPersonalizada />;
 }
