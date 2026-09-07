@@ -1,10 +1,10 @@
 "use client"; // Necesario en Next.js para usar animaciones y estados
 
 import { useRef, useState } from 'react';
-import Image from 'next/image';
+import InvitacionContenido from './InvitacionContenido';
 import { AnimatePresence, motion, useMotionValue, useSpring, useMotionValueEvent, useTransform } from 'framer-motion';
 
-export default function CartaInteractiva({ nombreInicialProp = '', invitacionSrc = '/invitacion.png', mostrarEtiquetaPersonalizada = true, esPersonalizada = false }) {
+export default function CartaInteractiva({ nombreInicialProp = '', mostrarEtiquetaPersonalizada = true, esPersonalizada = false, datosInvitacion = {} }) {
   const nombreDesdeUrl = typeof window === 'undefined'
     ? ''
     : new URLSearchParams(window.location.search).get('nombre')?.trim() || '';
@@ -308,12 +308,10 @@ export default function CartaInteractiva({ nombreInicialProp = '', invitacionSrc
               }
             }}
           >
-            <Image
-              className="object-cover"
-              fill
-              priority
-              src={invitacionSrc}
-              alt="Invitación especial de la Iglesia Adventista del Séptimo Día"
+            <InvitacionContenido
+              datos={datosInvitacion}
+              nombre={nombrePersonalizado}
+              personalizada={esPersonalizada}
             />
 
             {mostrarEtiquetaPersonalizada && nombrePersonalizado && (
