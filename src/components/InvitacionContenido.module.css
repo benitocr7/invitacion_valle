@@ -30,7 +30,7 @@
   position: relative;
   height: 57%;
   overflow: hidden;
-  padding: 3.2% 7% 5.5%;
+  padding: 3.8% 7% 5.5%;
   text-align: center;
   background:
     radial-gradient(circle at 0 25%, rgba(211,164,83,.38), transparent 25%),
@@ -50,7 +50,7 @@
 
 .nombre {
   position: relative;
-  margin: 0 0 .8%;
+  margin: 0 0 1.2%;
   color: #aa741e;
   font-size: 3.1cqw;
   font-weight: 800;
@@ -67,7 +67,7 @@
 .panel h1 {
   position: relative;
   max-width: 100%;
-  margin: .3% 0 1%;
+  margin: .8% 0 1.5%;
   font: italic 500 10.2cqw/.9 Georgia,"Times New Roman",serif;
   letter-spacing: -.035em;
   white-space: nowrap;
@@ -97,7 +97,7 @@
 
 .panel h3 {
   position: relative;
-  margin: 1.2% 0 1.8%;
+  margin: 1.8% 0 2.5%;
   color: #b9822d;
   font-size: 3.55cqw;
   line-height: 1;
@@ -106,22 +106,22 @@
 
 .detalles {
   position: relative;
-  margin-top: 2.3%;
+  margin-top: 3.2%;
 }
 
 .detalles > div {
   display: grid;
   grid-template-columns: 14% 1fr;
   align-items: center;
-  min-height: 8.2cqw;
-  padding: 1.1% 0;
+  min-height: 10.8cqw;
+  padding: 1.8% 0;
   border-bottom: 1px solid #c39344;
   text-align: left;
 }
 
 .detalles b {
   color: #bc852d;
-  font-size: 5.5cqw;
+  font-size: 6.2cqw;
   line-height: 1;
   text-align: center;
 }
@@ -129,8 +129,8 @@
 .detalles p {
   margin: 0;
   padding-left: 4%;
-  font-size: 3.05cqw;
-  line-height: 1.12;
+  font-size: 3.15cqw;
+  line-height: 1.16;
 }
 
 .detalles p strong,
