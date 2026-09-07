@@ -23,7 +23,7 @@ export default function InvitacionContenido({
   personalizada?: boolean;
 }) {
   return (
-    <div className={styles.lienzo}>
+    <div className={`${styles.lienzo} ${personalizada ? styles.personalizada : ""}`}>
       <div className={styles.foto}>
         <Image
           src={datos.imagenIglesia || "/foto_iglesia.png"}
