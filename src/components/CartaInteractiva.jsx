@@ -324,9 +324,9 @@ export default function CartaInteractiva({ nombreInicialProp = '', mostrarEtique
             <div 
               className="absolute z-10 left-1/2 -translate-x-1/2"
               style={{
-                top: '95.5%',
-                width: '46.5%',
-                height: '3.2%'
+                top: '88.3%',
+                width: '60%',
+                height: '5.4%'
               }}
             >
               <motion.button 
