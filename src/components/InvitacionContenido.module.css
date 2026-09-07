@@ -7,6 +7,43 @@
   background: #fffdfa;
 }
 
+
+/* La invitación personalizada necesita más altura para la línea con el nombre. */
+.personalizada .foto {
+  height: 39.5%;
+}
+
+.personalizada .panel {
+  height: 60.5%;
+  padding-top: 2.8%;
+}
+
+.personalizada .nombre {
+  margin-bottom: .5%;
+  font-size: 2.9cqw;
+}
+
+.personalizada .panel h1 {
+  margin-top: .25%;
+}
+
+.personalizada .panel h3 {
+  margin-bottom: 1.4%;
+}
+
+.personalizada .detalles {
+  margin-top: 1.8%;
+}
+
+.personalizada .detalles > div {
+  min-height: 9.4cqw;
+  padding-block: 1.2%;
+}
+
+.personalizada .aceptar {
+  top: 80.7%;
+}
+
 .foto {
   position: relative;
   width: 100%;
