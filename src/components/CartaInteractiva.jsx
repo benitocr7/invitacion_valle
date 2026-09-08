@@ -16,7 +16,7 @@ export default function CartaInteractiva({ nombreInicialProp = '', mostrarEtique
   const [cartaAbierta, setCartaAbierta] = useState(false);
   const [mostrarFormulario, setMostrarFormulario] = useState(false);
   const [nombreFamilia, setNombreFamilia] = useState(nombreInicial);
-  const [tipoAsistencia, setTipoAsistencia] = useState(esPersonalizada ? 'individual' : 'familia');
+  const [tipoAsistencia, setTipoAsistencia] = useState('individual');
   const [integrantes, setIntegrantes] = useState('');
   const [asistenciaConfirmada, setAsistenciaConfirmada] = useState(false);
   const [audioHabilitado, setAudioHabilitado] = useState(false);
@@ -388,13 +388,6 @@ export default function CartaInteractiva({ nombreInicialProp = '', mostrarEtique
                             <div className="grid grid-cols-2 gap-2 w-full">
                               <button
                                 type="button"
-                                onClick={() => setTipoAsistencia('familia')}
-                                className={`rounded-lg border px-4 py-3 font-semibold transition-colors ${tipoAsistencia === 'familia' ? 'border-[#cc9b4c] bg-[#cc9b4c]/15 text-[#112a46]' : 'border-gray-300 bg-white text-gray-500'}`} style={{ padding: 'clamp(0.55rem, 2.5vw, 0.75rem)' }}
-                              >
-                                Familia
-                              </button>
-                              <button
-                                type="button"
                                 onClick={() => {
                                   setTipoAsistencia('individual');
                                   setIntegrantes('');
@@ -402,6 +395,13 @@ export default function CartaInteractiva({ nombreInicialProp = '', mostrarEtique
                                 className={`rounded-lg border px-4 py-3 font-semibold transition-colors ${tipoAsistencia === 'individual' ? 'border-[#cc9b4c] bg-[#cc9b4c]/15 text-[#112a46]' : 'border-gray-300 bg-white text-gray-500'}`} style={{ padding: 'clamp(0.55rem, 2.5vw, 0.75rem)' }}
                               >
                                 Individual
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => setTipoAsistencia('familia')}
+                                className={`rounded-lg border px-4 py-3 font-semibold transition-colors ${tipoAsistencia === 'familia' ? 'border-[#cc9b4c] bg-[#cc9b4c]/15 text-[#112a46]' : 'border-gray-300 bg-white text-gray-500'}`} style={{ padding: 'clamp(0.55rem, 2.5vw, 0.75rem)' }}
+                              >
+                                Familia
                               </button>
                             </div>
                             <label className="w-full text-sm font-semibold text-[#112a46]">
