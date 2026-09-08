@@ -355,7 +355,7 @@ export default function CartaInteractiva({ nombreInicialProp = '', mostrarEtique
             <AnimatePresence>
               {mostrarFormulario && (
                 <motion.div
-                  className="absolute inset-0 bg-black/60 z-20 flex items-center justify-center backdrop-blur-sm p-6"
+                  className="absolute inset-0 bg-black/70 z-20 flex items-center justify-center overflow-hidden backdrop-blur-sm p-2 sm:p-5"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
@@ -363,33 +363,33 @@ export default function CartaInteractiva({ nombreInicialProp = '', mostrarEtique
                   style={{ touchAction: 'auto' }}
                 >
                   <motion.div 
-                    className="bg-white/95 p-8 rounded-2xl w-full max-w-sm flex flex-col items-center gap-6 shadow-2xl"
+                    className="bg-white/95 w-full max-w-sm max-h-[calc(100%-1rem)] overflow-y-auto overscroll-contain rounded-2xl p-4 sm:p-6 flex flex-col items-center gap-3 sm:gap-4 shadow-2xl"
                     initial={{ scale: 0.9, y: 20 }}
                     animate={{ scale: 1, y: 0 }}
                     exit={{ scale: 0.9, y: 20 }}
                   >
                     {!asistenciaConfirmada ? (
                       <>
-                        <h3 className="text-2xl font-semibold text-[#112a46] text-center">
+                        <h3 className="text-[clamp(1.35rem,5.5vw,1.6rem)] leading-tight font-semibold text-[#112a46] text-center">
                           Confirma tu Asistencia
                         </h3>
                         {esPersonalizada ? (
-                          <p className="text-center text-gray-600 text-sm">
+                          <p className="text-center text-gray-600 text-[clamp(.82rem,3.5vw,.95rem)] leading-snug">
                             Confirma tu asistencia, {nombreFamilia}.
                           </p>
                         ) : (
                           <>
-                            <p className="text-center text-gray-600 text-sm">
+                            <p className="text-center text-gray-600 text-[clamp(.82rem,3.5vw,.95rem)] leading-snug">
                               ¿Cómo asistirás a la invitación?
                             </p>
-                            <p className="w-full rounded-lg bg-[#fff7e8] px-4 py-3 text-center text-sm font-medium leading-relaxed text-[#6f5526]">
+                            <p className="w-full rounded-lg bg-[#fff7e8] px-3 py-2 text-center text-[clamp(.78rem,3.3vw,.9rem)] font-medium leading-snug text-[#6f5526]">
                               <strong>Indicación:</strong> Si eliges Familia, escribe cuántas personas asistirán. Si eliges Individual, no necesitas poner ese número.
                             </p>
-                            <div className="grid grid-cols-2 gap-3 w-full">
+                            <div className="grid grid-cols-2 gap-2 w-full">
                               <button
                                 type="button"
                                 onClick={() => setTipoAsistencia('familia')}
-                                className={`rounded-lg border px-4 py-3 font-semibold transition-colors ${tipoAsistencia === 'familia' ? 'border-[#cc9b4c] bg-[#cc9b4c]/15 text-[#112a46]' : 'border-gray-300 bg-white text-gray-500'}`}
+                                className={`rounded-lg border px-4 py-3 font-semibold transition-colors ${tipoAsistencia === 'familia' ? 'border-[#cc9b4c] bg-[#cc9b4c]/15 text-[#112a46]' : 'border-gray-300 bg-white text-gray-500'}`} style={{ padding: 'clamp(0.55rem, 2.5vw, 0.75rem)' }}
                               >
                                 Familia
                               </button>
@@ -399,7 +399,7 @@ export default function CartaInteractiva({ nombreInicialProp = '', mostrarEtique
                                   setTipoAsistencia('individual');
                                   setIntegrantes('');
                                 }}
-                                className={`rounded-lg border px-4 py-3 font-semibold transition-colors ${tipoAsistencia === 'individual' ? 'border-[#cc9b4c] bg-[#cc9b4c]/15 text-[#112a46]' : 'border-gray-300 bg-white text-gray-500'}`}
+                                className={`rounded-lg border px-4 py-3 font-semibold transition-colors ${tipoAsistencia === 'individual' ? 'border-[#cc9b4c] bg-[#cc9b4c]/15 text-[#112a46]' : 'border-gray-300 bg-white text-gray-500'}`} style={{ padding: 'clamp(0.55rem, 2.5vw, 0.75rem)' }}
                               >
                                 Individual
                               </button>
@@ -411,7 +411,7 @@ export default function CartaInteractiva({ nombreInicialProp = '', mostrarEtique
                                 placeholder={tipoAsistencia === 'familia' ? 'Ej: Familia Pérez' : 'Ej: Juan Pérez'}
                                 value={nombreFamilia}
                                 onChange={(e) => setNombreFamilia(e.target.value)}
-                                className="mt-2 w-full rounded-lg border border-gray-300 px-4 py-3 text-base font-normal text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#cc9b4c]"
+                                className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-base font-normal text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#cc9b4c]"
                               />
                             </label>
                           </>
@@ -426,14 +426,14 @@ export default function CartaInteractiva({ nombreInicialProp = '', mostrarEtique
                               placeholder="Ej: 4"
                               value={integrantes}
                               onChange={(e) => setIntegrantes(e.target.value)}
-                              className="mt-2 w-full rounded-lg border border-gray-300 px-4 py-3 text-base font-normal text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#cc9b4c]"
+                              className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-base font-normal text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#cc9b4c]"
                             />
                           </label>
                         )}
                         <div className="flex gap-3 w-full">
                           <button
                             onClick={() => setMostrarFormulario(false)}
-                            className="flex-1 px-4 py-3 rounded-lg bg-gray-200 text-gray-700 font-semibold hover:bg-gray-300 transition-colors"
+                            className="flex-1 px-3 py-2.5 rounded-lg bg-gray-200 text-sm text-gray-700 font-semibold hover:bg-gray-300 transition-colors"
                           >
                             Cancelar
                           </button>
@@ -464,7 +464,7 @@ export default function CartaInteractiva({ nombreInicialProp = '', mostrarEtique
                               }
                             }}
                             disabled={!nombreFamilia.trim() || (tipoAsistencia === 'familia' && (!integrantes || Number(integrantes) < 1))}
-                            className="flex-1 px-4 py-3 rounded-lg bg-[#cc9b4c] text-[#112a46] font-semibold hover:bg-[#b88534] disabled:opacity-50 transition-colors"
+                            className="flex-1 px-3 py-2.5 rounded-lg bg-[#cc9b4c] text-sm text-[#112a46] font-semibold hover:bg-[#b88534] disabled:opacity-50 transition-colors"
                           >
                             {esPersonalizada ? 'Confirmar asistencia' : 'Confirmar'}
                           </button>
