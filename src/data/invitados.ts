@@ -18,6 +18,7 @@ const invitados: Array<[string, string]> = [
   ["Anahí Masaquiza", S],
   ["Apolonia De Las Mercedes Garcia Moreno", S],
   ["Arellys Denisse Ronquillo Jaramillo", S],
+  ["Beccy Malena Ordóñez", S],
   ["Carlos Fernando Sarango Sarango", R],
   ["Celia Benitez Cajamarca", S],
   ["Claudia Sofia Medina León", S],
