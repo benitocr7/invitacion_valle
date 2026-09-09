@@ -83,7 +83,7 @@ export default function CartaInteractiva({ nombreInicialProp = '', mostrarEtique
   const invScale = useTransform(smoothDragY, [0, -220], [0.34, 1]);
   const invOpacity = useTransform(smoothDragY, [0, -60], [0, 1]);
   const invClip = useTransform(smoothDragY, [0, -220], ['inset(14% 7% 36% 7%)', 'inset(0% 0% 0% 0%)']);
-  const invY = useTransform(smoothDragY, [0, -220], ['calc(-50% + 150px)', '-50%']);
+  const invY = useTransform(smoothDragY, [0, -220], [150, 0]);
 
   useMotionValueEvent(smoothDragY, "change", (latest) => {
     const video = videoRef.current;
@@ -177,50 +177,6 @@ export default function CartaInteractiva({ nombreInicialProp = '', mostrarEtique
         </button>
       )}
 
-      {asistenciaConfirmada && !mostrarFormulario && !cartaAbierta && (
-        <motion.div
-          className="absolute inset-0 z-40 flex items-center justify-center bg-white/95 px-6 backdrop-blur-[2px]"
-          initial={{ opacity: 0, scale: 0.96 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 0.98 }}
-          transition={{ duration: 1.2, ease: 'easeOut' }}
-        >
-          <motion.div
-            className="flex max-w-md flex-col items-center gap-5 rounded-[28px] border border-[#e7e4df] bg-white p-8 text-center shadow-[0_24px_80px_rgba(17,42,70,0.12)]"
-            initial={{ opacity: 0, y: 24, filter: 'blur(4px)' }}
-            animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-            transition={{ duration: 1, delay: 0.18, ease: 'easeOut' }}
-          >
-            <div className="flex h-20 w-20 items-center justify-center rounded-full bg-[#dff5ee] shadow-inner shadow-[#a8dcc3]">
-              <svg className="h-10 w-10 text-[#1b9d72]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7" />
-              </svg>
-            </div>
-            <div className="space-y-1">
-              <p className="text-[10px] font-semibold uppercase tracking-[0.35em] text-[#8d8d8d]">
-                Confirmación
-              </p>
-              <h3 className="text-3xl font-semibold text-[#112a46]">
-                ¡Gracias, {nombreFamilia}!
-              </h3>
-            </div>
-            <p className="text-[#555] text-[min(3.5vw,1.8dvh)] mb-6 text-center leading-relaxed">
-              Tu asistencia ha sido confirmada.
-            </p>
-            <button
-              onClick={() => {
-                if (!videoFinalizado) {
-                  setAsistenciaConfirmada(false);
-                }
-              }}
-              className="mt-2 rounded-full bg-[#112a46] px-6 py-2.5 text-sm font-medium text-white shadow-lg shadow-[#112a46]/20 transition-all duration-200 hover:bg-[#1b3d68] hover:shadow-xl"
-            >
-              Cerrar
-            </button>
-          </motion.div>
-        </motion.div>
-      )}
-
       {esperandoDeslizar && (
         <>
           <motion.div
@@ -255,7 +211,7 @@ export default function CartaInteractiva({ nombreInicialProp = '', mostrarEtique
           />
 
           <motion.div
-            className="pointer-events-none absolute bottom-[18%] left-1/2 flex -translate-x-1/2 flex-col items-center text-center text-white drop-shadow-2xl"
+            className="pointer-events-none absolute bottom-[18%] left-1/2 flex -translate-x-1/2 flex-col items-center text-center text-white drop-shadow-2xl z-20"
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0 }}
@@ -279,17 +235,16 @@ export default function CartaInteractiva({ nombreInicialProp = '', mostrarEtique
       <AnimatePresence>
         {(esperandoDeslizar || abriendoCarta || cartaAbierta) && (
           <motion.div
-            className={`absolute left-1/2 top-1/2 h-[min(100dvh,177.7778vw)] w-[min(100vw,56.25dvh)] overflow-hidden bg-black z-10 ${cartaAbierta ? 'cursor-grab active:cursor-grabbing' : ''}`}
+            className={`absolute inset-0 m-auto h-[min(100dvh,177.7778vw)] w-[min(100vw,56.25dvh)] overflow-hidden bg-black z-10 ${cartaAbierta ? 'cursor-grab active:cursor-grabbing' : ''}`}
             style={{ 
               touchAction: 'none', 
               transformOrigin: '50% 40%',
-              x: "-50%",
-              y: cartaAbierta ? "-50%" : invY,
+              y: cartaAbierta ? 0 : invY,
               scale: cartaAbierta ? 1 : invScale,
               clipPath: cartaAbierta ? 'inset(0% 0% 0% 0%)' : invClip,
               opacity: cartaAbierta ? 1 : invOpacity,
             }}
-            exit={{ y: '50%', opacity: 0, scale: 0.5 }}
+            exit={{ y: 300, opacity: 0, scale: 0.5 }}
             transition={{ duration: 0.5 }}
             drag={cartaAbierta ? "y" : false}
             dragConstraints={{ top: 0, bottom: 500 }}
@@ -312,6 +267,7 @@ export default function CartaInteractiva({ nombreInicialProp = '', mostrarEtique
               datos={datosInvitacion}
               nombre={nombrePersonalizado}
               personalizada={esPersonalizada}
+              onAceptar={() => setMostrarFormulario(true)}
             />
 
             {mostrarEtiquetaPersonalizada && nombrePersonalizado && (
@@ -350,155 +306,207 @@ export default function CartaInteractiva({ nombreInicialProp = '', mostrarEtique
                 title="Aceptar Invitación"
               />
             </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-            {/* Formulario Modal superpuesto */}
-            <AnimatePresence>
-              {mostrarFormulario && (
-                <motion.div
-                  className="absolute inset-0 bg-black/70 z-20 flex items-center justify-center overflow-hidden backdrop-blur-sm p-2 sm:p-5"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  onPointerDown={(e) => e.stopPropagation()}
-                  style={{ touchAction: 'auto' }}
-                >
-                  <motion.div 
-                    className="bg-white/95 w-full max-w-sm max-h-[calc(100%-1rem)] overflow-y-auto overscroll-contain rounded-2xl p-4 sm:p-6 flex flex-col items-center gap-3 sm:gap-4 shadow-2xl"
-                    initial={{ scale: 0.9, y: 20 }}
-                    animate={{ scale: 1, y: 0 }}
-                    exit={{ scale: 0.9, y: 20 }}
-                  >
-                    {!asistenciaConfirmada ? (
-                      <>
-                        <h3 className="text-[clamp(1.35rem,5.5vw,1.6rem)] leading-tight font-semibold text-[#112a46] text-center">
-                          Confirma tu Asistencia
-                        </h3>
-                        {esPersonalizada ? (
-                          <p className="text-center text-gray-600 text-[clamp(.82rem,3.5vw,.95rem)] leading-snug">
-                            Confirma tu asistencia, {nombreFamilia}.
-                          </p>
-                        ) : (
-                          <>
-                            <p className="text-center text-gray-600 text-[clamp(.82rem,3.5vw,.95rem)] leading-snug">
-                              ¿Cómo asistirás a la invitación?
-                            </p>
-                            <p className="w-full rounded-lg bg-[#fff7e8] px-3 py-2 text-center text-[clamp(.78rem,3.3vw,.9rem)] font-medium leading-snug text-[#6f5526]">
-                              <strong>Indicación:</strong> Si eliges Familia, escribe cuántas personas asistirán. Si eliges Individual, no necesitas poner ese número.
-                            </p>
-                            <div className="grid grid-cols-2 gap-2 w-full">
-                              <button
-                                type="button"
-                                onClick={() => {
-                                  setTipoAsistencia('individual');
-                                  setIntegrantes('');
-                                }}
-                                className={`rounded-lg border px-4 py-3 font-semibold transition-colors ${tipoAsistencia === 'individual' ? 'border-[#cc9b4c] bg-[#cc9b4c]/15 text-[#112a46]' : 'border-gray-300 bg-white text-gray-500'}`} style={{ padding: 'clamp(0.55rem, 2.5vw, 0.75rem)' }}
-                              >
-                                Individual
-                              </button>
-                              <button
-                                type="button"
-                                onClick={() => setTipoAsistencia('familia')}
-                                className={`rounded-lg border px-4 py-3 font-semibold transition-colors ${tipoAsistencia === 'familia' ? 'border-[#cc9b4c] bg-[#cc9b4c]/15 text-[#112a46]' : 'border-gray-300 bg-white text-gray-500'}`} style={{ padding: 'clamp(0.55rem, 2.5vw, 0.75rem)' }}
-                              >
-                                Familia
-                              </button>
-                            </div>
-                            <label className="w-full text-sm font-semibold text-[#112a46]">
-                              {tipoAsistencia === 'familia' ? 'Nombre de la familia' : 'Tu nombre'}
-                              <input
-                                type="text"
-                                placeholder={tipoAsistencia === 'familia' ? 'Ej: Familia Pérez' : 'Ej: Juan Pérez'}
-                                value={nombreFamilia}
-                                onChange={(e) => setNombreFamilia(e.target.value)}
-                                className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-base font-normal text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#cc9b4c]"
-                              />
-                            </label>
-                          </>
-                        )}
-                        {!esPersonalizada && tipoAsistencia === 'familia' && (
-                          <label className="w-full text-sm font-semibold text-[#112a46]">
-                            Número de personas que asistirán
-                            <input
-                              type="number"
-                              min="1"
-                              inputMode="numeric"
-                              placeholder="Ej: 4"
-                              value={integrantes}
-                              onChange={(e) => setIntegrantes(e.target.value)}
-                              className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-base font-normal text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#cc9b4c]"
-                            />
-                          </label>
-                        )}
-                        <div className="flex gap-3 w-full">
-                          <button
-                            onClick={() => setMostrarFormulario(false)}
-                            className="flex-1 px-3 py-2.5 rounded-lg bg-gray-200 text-sm text-gray-700 font-semibold hover:bg-gray-300 transition-colors"
-                          >
-                            Cancelar
-                          </button>
-                          <button
-                            onClick={async () => {
-                              const nombreValido = nombreFamilia.trim();
-                              const integrantesValidos = tipoAsistencia === 'individual' || (Number.isInteger(Number(integrantes)) && Number(integrantes) > 0);
-                              if (nombreValido && integrantesValidos) {
-                                try {
-                                  const res = await fetch('/api/confirmar', {
-                                    method: 'POST',
-                                    headers: { 'Content-Type': 'application/json' },
-                                    body: JSON.stringify({
-                                      name: nombreValido,
-                                      tipo: tipoAsistencia,
-                                      integrantes: tipoAsistencia === 'familia' ? Number(integrantes) : null,
-                                    }),
-                                  });
-                                  if (res.ok) {
-                                    activarVideoFinal();
-                                    setAsistenciaConfirmada(true);
-                                  } else {
-                                    console.error('Error al confirmar asistencia');
-                                  }
-                                } catch (error) {
-                                  console.error('Error de red:', error);
-                                }
-                              }
-                            }}
-                            disabled={!nombreFamilia.trim() || (tipoAsistencia === 'familia' && (!integrantes || Number(integrantes) < 1))}
-                            className="flex-1 px-3 py-2.5 rounded-lg bg-[#cc9b4c] text-sm text-[#112a46] font-semibold hover:bg-[#b88534] disabled:opacity-50 transition-colors"
-                          >
-                            {esPersonalizada ? 'Confirmar asistencia' : 'Confirmar'}
-                          </button>
-                        </div>
-                      </>
-                    ) : (
-                      <div className="text-center flex flex-col items-center gap-4 py-4">
-                        <div className="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center mb-2">
-                          <svg className="w-8 h-8 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7" />
-                          </svg>
-                        </div>
-                        <h3 className="text-xl font-semibold text-[#112a46]">
-                          ¡Gracias, {nombreFamilia}!
-                        </h3>
-                        <p className="text-gray-600">
-                          Tu asistencia ha sido confirmada.
-                        </p>
+      {/* Formulario Modal superpuesto a nivel raíz */}
+      <AnimatePresence>
+        {mostrarFormulario && (
+          <motion.div
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 p-4 backdrop-blur-md"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onPointerDown={(e) => e.stopPropagation()}
+            style={{ touchAction: 'auto' }}
+          >
+            <motion.div 
+              className="bg-white/95 w-full max-w-sm max-h-[90dvh] overflow-y-auto overscroll-contain rounded-2xl p-5 sm:p-6 flex flex-col items-center gap-3 sm:gap-4 shadow-2xl border border-white/20 my-auto"
+              initial={{ scale: 0.9, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.9, y: 20 }}
+            >
+              {!asistenciaConfirmada ? (
+                <>
+                  <h3 className="text-[clamp(1.35rem,5.5vw,1.6rem)] leading-tight font-semibold text-[#112a46] text-center">
+                    Confirma tu Asistencia
+                  </h3>
+                  {esPersonalizada ? (
+                    <p className="text-center text-gray-600 text-[clamp(.82rem,3.5vw,.95rem)] leading-snug">
+                      Confirma tu asistencia, {nombreFamilia}.
+                    </p>
+                  ) : (
+                    <>
+                      <p className="text-center text-gray-600 text-[clamp(.82rem,3.5vw,.95rem)] leading-snug">
+                        ¿Cómo asistirás a la invitación?
+                      </p>
+                      <p className="w-full rounded-lg bg-[#fff7e8] px-3 py-2 text-center text-[clamp(.78rem,3.3vw,.9rem)] font-medium leading-snug text-[#6f5526]">
+                        <strong>Indicación:</strong> Si eliges Familia, escribe cuántas personas asistirán. Si eliges Individual, no necesitas poner ese número.
+                      </p>
+                      <div className="grid grid-cols-2 gap-2 w-full">
                         <button
+                          type="button"
                           onClick={() => {
-                            if (!videoFinalizado) {
-                              setAsistenciaConfirmada(false);
-                            }
+                            setTipoAsistencia('individual');
+                            setIntegrantes('');
                           }}
-                          className="mt-4 px-6 py-2 rounded-lg bg-[#112a46] text-white font-medium hover:bg-[#1a3f69] transition-colors"
+                          className={`rounded-lg border px-4 py-3 font-semibold transition-colors ${tipoAsistencia === 'individual' ? 'border-[#cc9b4c] bg-[#cc9b4c]/15 text-[#112a46]' : 'border-gray-300 bg-white text-gray-500'}`} style={{ padding: 'clamp(0.55rem, 2.5vw, 0.75rem)' }}
                         >
-                          Cerrar
+                          Individual
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setTipoAsistencia('familia')}
+                          className={`rounded-lg border px-4 py-3 font-semibold transition-colors ${tipoAsistencia === 'familia' ? 'border-[#cc9b4c] bg-[#cc9b4c]/15 text-[#112a46]' : 'border-gray-300 bg-white text-gray-500'}`} style={{ padding: 'clamp(0.55rem, 2.5vw, 0.75rem)' }}
+                        >
+                          Familia
                         </button>
                       </div>
-                    )}
-                  </motion.div>
-                </motion.div>
+                      <label className="w-full text-sm font-semibold text-[#112a46]">
+                        {tipoAsistencia === 'familia' ? 'Nombre de la familia' : 'Tu nombre'}
+                        <input
+                          type="text"
+                          placeholder={tipoAsistencia === 'familia' ? 'Ej: Familia Pérez' : 'Ej: Juan Pérez'}
+                          value={nombreFamilia}
+                          onChange={(e) => setNombreFamilia(e.target.value)}
+                          className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-base font-normal text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#cc9b4c]"
+                        />
+                      </label>
+                    </>
+                  )}
+                  {!esPersonalizada && tipoAsistencia === 'familia' && (
+                    <label className="w-full text-sm font-semibold text-[#112a46]">
+                      Número de personas que asistirán
+                      <input
+                        type="number"
+                        min="1"
+                        inputMode="numeric"
+                        placeholder="Ej: 4"
+                        value={integrantes}
+                        onChange={(e) => setIntegrantes(e.target.value)}
+                        className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-base font-normal text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#cc9b4c]"
+                      />
+                    </label>
+                  )}
+                  <div className="flex gap-3 w-full mt-1">
+                    <button
+                      type="button"
+                      onClick={() => setMostrarFormulario(false)}
+                      className="flex-1 px-3 py-2.5 rounded-lg bg-gray-200 text-sm text-gray-700 font-semibold hover:bg-gray-300 transition-colors"
+                    >
+                      Cancelar
+                    </button>
+                    <button
+                      type="button"
+                      onClick={async () => {
+                        const nombreValido = nombreFamilia.trim();
+                        const integrantesValidos = tipoAsistencia === 'individual' || (Number.isInteger(Number(integrantes)) && Number(integrantes) > 0);
+                        if (nombreValido && integrantesValidos) {
+                          try {
+                            const res = await fetch('/api/confirmar', {
+                              method: 'POST',
+                              headers: { 'Content-Type': 'application/json' },
+                              body: JSON.stringify({
+                                name: nombreValido,
+                                tipo: tipoAsistencia,
+                                integrantes: tipoAsistencia === 'familia' ? Number(integrantes) : null,
+                              }),
+                            });
+                            if (res.ok) {
+                              activarVideoFinal();
+                              setAsistenciaConfirmada(true);
+                            } else {
+                              console.error('Error al confirmar asistencia');
+                            }
+                          } catch (error) {
+                            console.error('Error de red:', error);
+                          }
+                        }
+                      }}
+                      disabled={!nombreFamilia.trim() || (tipoAsistencia === 'familia' && (!integrantes || Number(integrantes) < 1))}
+                      className="flex-1 px-3 py-2.5 rounded-lg bg-[#cc9b4c] text-sm text-[#112a46] font-semibold hover:bg-[#b88534] disabled:opacity-50 transition-colors cursor-pointer"
+                    >
+                      {esPersonalizada ? 'Confirmar asistencia' : 'Confirmar'}
+                    </button>
+                  </div>
+                </>
+              ) : (
+                <div className="text-center flex flex-col items-center gap-4 py-4">
+                  <div className="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center mb-2">
+                    <svg className="w-8 h-8 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7" />
+                    </svg>
+                  </div>
+                  <h3 className="text-xl font-semibold text-[#112a46]">
+                    ¡Gracias, {nombreFamilia}!
+                  </h3>
+                  <p className="text-gray-600">
+                    Tu asistencia ha sido confirmada.
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (!videoFinalizado) {
+                        setAsistenciaConfirmada(false);
+                      }
+                    }}
+                    className="mt-4 px-6 py-2 rounded-lg bg-[#112a46] text-white font-medium hover:bg-[#1a3f69] transition-colors"
+                  >
+                    Cerrar
+                  </button>
+                </div>
               )}
-            </AnimatePresence>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Confirmación exitosa superpuesta a nivel raíz si el formulario ya no está visible */}
+      <AnimatePresence>
+        {asistenciaConfirmada && !mostrarFormulario && !cartaAbierta && (
+          <motion.div
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 p-4 backdrop-blur-md"
+            initial={{ opacity: 0, scale: 0.96 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.98 }}
+            transition={{ duration: 0.8, ease: 'easeOut' }}
+            onPointerDown={(e) => e.stopPropagation()}
+          >
+            <motion.div
+              className="flex max-w-sm w-full flex-col items-center gap-4 rounded-2xl border border-[#e7e4df] bg-white p-6 sm:p-8 text-center shadow-2xl my-auto"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+            >
+              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#dff5ee] shadow-inner shadow-[#a8dcc3]">
+                <svg className="h-8 w-8 text-[#1b9d72]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+              <div className="space-y-1">
+                <p className="text-[10px] font-semibold uppercase tracking-[0.35em] text-[#8d8d8d]">
+                  Confirmación
+                </p>
+                <h3 className="text-2xl sm:text-3xl font-semibold text-[#112a46]">
+                  ¡Gracias, {nombreFamilia}!
+                </h3>
+              </div>
+              <p className="text-[#555] text-sm sm:text-base leading-relaxed">
+                Tu asistencia ha sido confirmada.
+              </p>
+              <button
+                type="button"
+                onClick={() => {
+                  if (!videoFinalizado) {
+                    setAsistenciaConfirmada(false);
+                  }
+                }}
+                className="mt-2 rounded-full bg-[#112a46] px-6 py-2.5 text-sm font-medium text-white shadow-lg transition-all hover:bg-[#1b3d68]"
+              >
+                Cerrar
+              </button>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>

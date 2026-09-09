@@ -18,10 +18,12 @@ export default function InvitacionContenido({
   datos = {},
   nombre = "",
   personalizada = false,
+  onAceptar,
 }: {
   datos?: ContenidoInvitacion;
   nombre?: string;
   personalizada?: boolean;
+  onAceptar?: () => void;
 }) {
   return (
     <div className={`${styles.lienzo} ${personalizada ? styles.personalizada : ""}`}>
@@ -53,7 +55,20 @@ export default function InvitacionContenido({
           <div><b aria-hidden="true">⌖</b><p><strong>{datos.lugar || "Lugar:"}</strong><small>{datos.direccion || "Valle – Loja, calles Cuenca y Chone"}</small></p></div>
         </div>
 
-        <div className={styles.aceptar}>Aceptar invitación</div>
+        <div
+          className={styles.aceptar}
+          onClick={onAceptar}
+          style={{ cursor: 'pointer' }}
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              onAceptar?.();
+            }
+          }}
+        >
+          Aceptar invitación
+        </div>
       </section>
     </div>
   );
