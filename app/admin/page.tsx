@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from 'react';
+import * as XLSX from 'xlsx';
 
 type Guest = {
   id: number;
@@ -76,6 +77,64 @@ export default function AdminPage() {
     return !search || guest.name.toLowerCase().includes(search) || guest.tipo.toLowerCase().includes(search);
   });
 
+  const exportToExcel = () => {
+    if (guests.length === 0) return;
+
+    // Direct data rows to export (respecting search filter if any, or full list)
+    const listToExport = filteredGuests.length > 0 ? filteredGuests : guests;
+
+    const formattedData = listToExport.map((guest, index) => ({
+      'N°': index + 1,
+      'Nombre / Familia': guest.name,
+      'Tipo de Invitación': guest.tipo === 'familia' ? 'Familia' : 'Individual',
+      'Integrantes': guest.tipo === 'familia' ? (guest.integrantes ?? 1) : 1,
+      'Fecha de Confirmación': new Date(guest.createdAt).toLocaleString('es-ES', {
+        dateStyle: 'medium',
+        timeStyle: 'short',
+      }),
+    }));
+
+    // Calculate total attendees for exported list
+    const totalPersonasExportadas = listToExport.reduce(
+      (sum, g) => sum + (g.tipo === 'familia' ? (g.integrantes ?? 1) : 1),
+      0
+    );
+
+    // Create worksheet
+    const worksheet = XLSX.utils.json_to_sheet(formattedData);
+
+    // Add empty row and summary row
+    XLSX.utils.sheet_add_json(
+      worksheet,
+      [
+        {
+          'N°': '',
+          'Nombre / Familia': 'TOTAL PERSONAS CONFIRMADAS',
+          'Tipo de Invitación': '',
+          'Integrantes': totalPersonasExportadas,
+          'Fecha de Confirmación': '',
+        },
+      ],
+      { skipHeader: true, origin: -1 }
+    );
+
+    // Auto fit column widths
+    worksheet['!cols'] = [
+      { wch: 6 },  // N°
+      { wch: 35 }, // Nombre
+      { wch: 20 }, // Tipo
+      { wch: 15 }, // Integrantes
+      { wch: 25 }, // Fecha
+    ];
+
+    // Create workbook and download file
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Invitados');
+
+    const dateStr = new Date().toISOString().split('T')[0];
+    XLSX.writeFile(workbook, `Lista_de_Invitados_${dateStr}.xlsx`);
+  };
+
   if (!authenticated) {
     return (
       <div className="min-h-screen bg-gray-100 flex items-center justify-center px-4">
@@ -117,7 +176,7 @@ export default function AdminPage() {
         </div>
 
         <div className="bg-white shadow rounded-lg overflow-hidden">
-          <div className="px-6 py-5 border-b border-gray-200 flex justify-between items-center bg-[#112a46]">
+          <div className="px-6 py-5 border-b border-gray-200 flex flex-wrap justify-between items-center bg-[#112a46] gap-3">
             <div className="flex items-center gap-3">
               <h3 className="text-xl leading-6 font-medium text-white">
                 Lista de Invitados
@@ -133,15 +192,29 @@ export default function AdminPage() {
                 </svg>
               </button>
             </div>
-            <button 
-              onClick={() => {
-                setAuthenticated(false);
-                setPassword('');
-              }}
-              className="text-sm bg-white/10 hover:bg-white/20 text-white px-3 py-1 rounded transition-colors"
-            >
-              Salir
-            </button>
+            
+            <div className="flex items-center gap-3">
+              <button
+                onClick={exportToExcel}
+                disabled={guests.length === 0}
+                className="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-medium px-4 py-2 rounded-lg text-sm transition-all shadow-sm disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                title="Exportar lista a Excel (.xlsx)"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                Exportar Excel
+              </button>
+              <button 
+                onClick={() => {
+                  setAuthenticated(false);
+                  setPassword('');
+                }}
+                className="text-sm bg-white/10 hover:bg-white/20 text-white px-3 py-2 rounded-lg transition-colors"
+              >
+                Salir
+              </button>
+            </div>
           </div>
           <div className="px-6 py-5">
             <input
@@ -197,3 +270,4 @@ export default function AdminPage() {
     </div>
   );
 }
+
