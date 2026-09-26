@@ -1,0 +1,318 @@
+/* Estilos del Carrusel de Anuncios */
+.contenedorPadre {
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+.tarjetaCarrusel {
+  position: relative;
+  width: 100%;
+  border-radius: 2rem;
+  background: linear-gradient(145deg, #0b192c 0%, #11263e 60%, #183354 100%);
+  border: 1px solid rgba(204, 155, 76, 0.25);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 30px rgba(204, 155, 76, 0.1);
+  overflow: hidden;
+  color: #ffffff;
+}
+
+.gridContenido {
+  display: grid;
+  grid-template-columns: 1fr;
+  min-height: 520px;
+  padding: 2.25rem;
+  gap: 2rem;
+}
+
+@media (min-width: 868px) {
+  .gridContenido {
+    grid-template-columns: 1.15fr 1fr;
+    padding: 3rem 3.25rem;
+    gap: 2.5rem;
+    align-items: center;
+  }
+}
+
+/* Columna Izquierda */
+.columnaIzquierda {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  z-index: 2;
+}
+
+.bloqueSuperior {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.25rem;
+}
+
+.badgePill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 1.15rem;
+  border-radius: 9999px;
+  border: 1px solid rgba(204, 155, 76, 0.45);
+  background: rgba(204, 155, 76, 0.08);
+  color: #e5be70;
+  font-size: 0.725rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  backdrop-filter: blur(4px);
+}
+
+.badgeDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: #cc9b4c;
+  box-shadow: 0 0 8px #cc9b4c;
+}
+
+.titulo {
+  font-size: clamp(1.75rem, 4vw, 2.75rem);
+  font-weight: 700;
+  line-height: 1.15;
+  color: #ffffff;
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+.descripcion {
+  font-size: clamp(0.9rem, 1.8vw, 1.05rem);
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.82);
+  font-weight: 400;
+  margin: 0;
+  max-width: 520px;
+}
+
+.grupoBotones {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+.botonPrimario {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.6rem;
+  border-radius: 9999px;
+  background: linear-gradient(135deg, #d4a34b 0%, #b88534 100%);
+  color: #0b192c;
+  font-size: 0.9rem;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 15px rgba(204, 155, 76, 0.35);
+}
+
+.botonPrimario:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(204, 155, 76, 0.5);
+  background: linear-gradient(135deg, #e5be70 0%, #cc9b4c 100%);
+}
+
+.botonSecundario {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.6rem;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: #ffffff;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  backdrop-filter: blur(4px);
+}
+
+.botonSecundario:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.5);
+  transform: translateY(-2px);
+}
+
+/* Footer Avatar Cita */
+.bloqueInferior {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding-top: 1.5rem;
+  margin-top: 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.avatarStack {
+  display: flex;
+  align-items: center;
+}
+
+.avatarItem {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 2px solid #0b192c;
+  object-fit: cover;
+  margin-left: -10px;
+  background-color: #1a3353;
+}
+
+.avatarItem:first-child {
+  margin-left: 0;
+}
+
+.avatarBadgeIcon {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 2px solid #0b192c;
+  background: rgba(204, 155, 76, 0.2);
+  color: #e5be70;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  margin-left: -10px;
+}
+
+.citaTexto {
+  font-size: 0.825rem;
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.75);
+  font-style: normal;
+}
+
+/* Columna Derecha (Imagen) */
+.columnaDerecha {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+}
+
+.marcoImagen {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 280px;
+  border-radius: 1.5rem;
+  overflow: hidden;
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.imagenPrincipal {
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.6s ease;
+}
+
+.marcoImagen:hover .imagenPrincipal {
+  transform: scale(1.03);
+}
+
+.degradadoImagen {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 50%, rgba(11, 25, 44, 0.75) 100%);
+  pointer-events: none;
+}
+
+/* Leyenda y Puntos de Navegación */
+.pieImagen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.sloganImagenTexto {
+  font-size: 0.825rem;
+  letter-spacing: 0.05em;
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 500;
+  text-align: center;
+}
+
+/* Navegación y Controles del Carrusel */
+.barranavegacion {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 2.25rem 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.puntosContenedor {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.punto {
+  width: 10px;
+  height: 10px;
+  border-radius: 9999px;
+  background-color: rgba(255, 255, 255, 0.25);
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.puntoActivo {
+  width: 28px;
+  background-color: #cc9b4c;
+  box-shadow: 0 0 10px rgba(204, 155, 76, 0.6);
+}
+
+.controlesFlechas {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.botonFlecha {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.botonFlecha:hover {
+  background: #cc9b4c;
+  color: #0b192c;
+  border-color: #cc9b4c;
+  box-shadow: 0 0 12px rgba(204, 155, 76, 0.4);
+}
+
+.contadorPaginas {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.6);
+  letter-spacing: 0.1em;
+}
+
+.contadorActivo {
+  color: #e5be70;
+}
